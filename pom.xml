@@ -11,7 +11,6 @@
 
     <modules>
         <module>daxpay-single</module>
-        <module>daxpay-single-sdk</module>
         <module>daxpay-single-demo</module>
         <module>daxpay-single-start</module>
         <module>bootx-platform</module>
