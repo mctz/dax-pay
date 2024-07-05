@@ -16,7 +16,7 @@ import java.util.Objects;
 @Getter
 @RequiredArgsConstructor
 public enum PayChannelEnum {
-
+    VMQ("vmq_pay", "V免签"),
     ALI("ali_pay", "支付宝"),
     WECHAT("wechat_pay", "微信支付"),
     UNION_PAY("union_pay", "云闪付"),

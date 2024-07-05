@@ -87,7 +87,7 @@ public class PayOrder extends MpBaseEntity implements EntityBaseFunction<PayOrde
     private Integer refundableBalance;
 
     /**
-     * 支付状态
+     * 支付状态:progress、success、close、cancel、fail
      * @see PayStatusEnum
      */
     @DbColumn(comment = "支付状态", length = 20, isNull = false)

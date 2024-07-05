@@ -3,6 +3,7 @@ package cn.daxpay.single.gateway.controller;
 import cn.bootx.platform.common.core.annotation.IgnoreAuth;
 import cn.daxpay.single.service.core.channel.alipay.service.AliPayCallbackService;
 import cn.daxpay.single.service.core.channel.union.service.UnionPayCallbackService;
+import cn.daxpay.single.service.core.channel.vmq.service.VmqPayCallbackService;
 import cn.daxpay.single.service.core.channel.wechat.service.WeChatPayCallbackService;
 import cn.daxpay.single.service.core.extra.AliPayAuthService;
 import cn.daxpay.single.service.core.extra.WeChatAuthService;
@@ -36,6 +37,8 @@ import java.util.Map;
 @AllArgsConstructor
 public class CallbackReceiverController {
 
+    private final VmqPayCallbackService vmqPayCallbackService;
+
     private final AliPayCallbackService aliPayCallbackService;
 
     private final WeChatAuthService wechatAuthService;
@@ -45,6 +48,14 @@ public class CallbackReceiverController {
     private final UnionPayCallbackService unionPayCallbackService;
 
     private final AliPayAuthService aliPayAuthService;
+
+    @SneakyThrows
+    @Operation(summary = "V免签信息回调")
+    @PostMapping("/vmq")
+    public String vmqPayNotify(HttpServletRequest request) {
+        Map<String, String> stringStringMap = PayUtil.toMap(request);
+        return vmqPayCallbackService.callback(stringStringMap);
+    }
 
     @SneakyThrows
     @Operation(summary = "支付宝信息回调")

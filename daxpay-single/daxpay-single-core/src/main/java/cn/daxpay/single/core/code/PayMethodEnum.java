@@ -16,7 +16,8 @@ import java.util.Objects;
 @Getter
 @AllArgsConstructor
 public enum PayMethodEnum {
-
+    WX("wechat", "微信"),
+    ALI("alipay", "支付宝"),
     NORMAL("normal", "常规支付"),
     WAP("wap", "wap支付"),
     APP("app", "应用支付"),
