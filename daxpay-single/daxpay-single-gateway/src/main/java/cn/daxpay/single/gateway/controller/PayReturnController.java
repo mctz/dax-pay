@@ -4,6 +4,7 @@ import cn.bootx.platform.common.core.annotation.IgnoreAuth;
 import cn.daxpay.single.service.core.payment.notice.service.PayReturnService;
 import cn.daxpay.single.service.param.channel.alipay.AliPayReturnParam;
 import cn.daxpay.single.service.param.channel.union.UnionPayReturnParam;
+import cn.daxpay.single.service.param.channel.vmq.VmqPayReturnParam;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,13 @@ import org.springframework.web.servlet.ModelAndView;
 @RequiredArgsConstructor
 public class PayReturnController {
     private final PayReturnService payReturnService;
+
+    @Operation(summary = "V免签同步跳转通知")
+    @GetMapping("/vmq")
+    public ModelAndView vmqPay(VmqPayReturnParam param){
+        String url = payReturnService.vmqPay(param);
+        return new ModelAndView("redirect:" + url);
+    }
 
     @Operation(summary = "支付宝同步跳转通知")
     @GetMapping("/alipay")

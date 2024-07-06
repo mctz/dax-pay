@@ -1,6 +1,7 @@
 package cn.daxpay.single.service.core.channel.vmq.service;
 
 import cn.bootx.platform.common.core.exception.DataNotExistException;
+import cn.daxpay.single.core.exception.ConfigNotEnableException;
 import cn.daxpay.single.service.core.channel.vmq.dao.VmqPayConfigManager;
 import cn.daxpay.single.service.core.channel.vmq.entity.VmqPayConfig;
 import cn.daxpay.single.service.core.system.config.service.PlatformConfigService;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class VmqPayConfigService {
     /** 默认V免签配置的主键ID */
     private final static Long ID = 0L;
-    private final VmqPayConfigManager alipayConfigManager;
+    private final VmqPayConfigManager vmqPayConfigManager;
     private final PlatformConfigService platformConfigService;
 
     /**
@@ -36,16 +37,16 @@ public class VmqPayConfigService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void update(VmqPayConfigParam param) {
-        VmqPayConfig alipayConfig = alipayConfigManager.findById(ID).orElseThrow(() -> new DataNotExistException("V免签配置不存在"));
+        VmqPayConfig alipayConfig = vmqPayConfigManager.findById(ID).orElseThrow(() -> new DataNotExistException("V免签配置不存在"));
         BeanUtil.copyProperties(param, alipayConfig, CopyOptions.create().ignoreNullValue());
-        alipayConfigManager.updateById(alipayConfig);
+        vmqPayConfigManager.updateById(alipayConfig);
     }
 
     /**
      * 获取支付配置
      */
     public VmqPayConfig getConfig(){
-        return alipayConfigManager.findById(ID).orElseThrow(() -> new DataNotExistException("V免签配置不存在"));
+        return vmqPayConfigManager.findById(ID).orElseThrow(() -> new DataNotExistException("V免签配置不存在"));
     }
 
     /**
@@ -53,6 +54,9 @@ public class VmqPayConfigService {
      */
     public VmqPayConfig getAndCheckConfig() {
         VmqPayConfig alipayConfig = this.getConfig();
+        if (!alipayConfig.getEnable()){
+            throw new ConfigNotEnableException("V免签支付未启用");
+        }
         return alipayConfig;
     }
 
@@ -60,14 +64,14 @@ public class VmqPayConfigService {
      * 生成通知地址
      */
     public String generateNotifyUrl(){
-        return platformConfigService.getConfig().getWebsiteUrl() + "/unipay/callback/alipay";
+        return platformConfigService.getConfig().getWebsiteUrl() + "/unipay/callback/vmq";
     }
 
     /**
      * 生成同步跳转地址
      */
     public String generateReturnUrl(){
-        return platformConfigService.getConfig().getWebsiteUrl() + "/unipay/return/alipay";
+        return platformConfigService.getConfig().getWebsiteUrl() + "/unipay/return/vmq";
     }
 
     /**

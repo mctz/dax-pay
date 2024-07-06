@@ -16,12 +16,12 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Accessors(chain = true)
-@Schema(title = "支付宝配置")
+@Schema(title = "V免签配置")
 public class VmqPayConfigDto extends BaseDto implements Serializable {
 
     private static final long serialVersionUID = 6641158663606363171L;
 
-    @Schema(description = "支付宝商户appId")
+    @Schema(description = "V免签商户appId")
     @SensitiveInfo
     private String appId;
 

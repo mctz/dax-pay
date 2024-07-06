@@ -21,6 +21,12 @@ public class VmqPayConfigParam {
     @Schema(description = "V免签密钥")
     private String appKey;
 
+    @Schema(description = "是否启用")
+    private Boolean enable;
+
+    @Schema(description = "邮箱")
+    private String email;
+
     @Schema(description = "支付限额")
     private Integer limitAmount;
 
@@ -44,9 +50,6 @@ public class VmqPayConfigParam {
 
     @Schema(description = "超时配置")
     private Integer expireTime;
-
-    @Schema(description = "可用支付方式")
-    private List<String> payWays;
 
     @Schema(description = "状态")
     private String status;

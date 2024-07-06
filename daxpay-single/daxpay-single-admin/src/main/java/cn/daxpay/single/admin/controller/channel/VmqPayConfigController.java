@@ -20,30 +20,30 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 public class VmqPayConfigController {
 
-    private final VmqPayConfigService alipayConfigService;
+    private final VmqPayConfigService vmqPayConfigService;
 
     @Operation(summary = "获取配置")
     @GetMapping("/getConfig")
     public ResResult<VmqPayConfigDto> getConfig() {
-        return Res.ok(alipayConfigService.getConfig().toDto());
+        return Res.ok(vmqPayConfigService.getConfig().toDto());
     }
 
     @Operation(summary = "更新")
     @PostMapping("/update")
     public ResResult<Void> update(@RequestBody VmqPayConfigParam param) {
-        alipayConfigService.update(param);
+        vmqPayConfigService.update(param);
         return Res.ok();
     }
 
     @Operation(summary = "生成异步通知地址")
     @GetMapping("/generateNotifyUrl")
     public ResResult<String> generateNotifyUrl() {
-        return Res.ok(alipayConfigService.generateNotifyUrl());
+        return Res.ok(vmqPayConfigService.generateNotifyUrl());
     }
 
     @Operation(summary = "生成同步通知地址")
     @GetMapping("/generateReturnUrl")
     public ResResult<String> generateReturnUrl() {
-        return Res.ok(alipayConfigService.generateReturnUrl());
+        return Res.ok(vmqPayConfigService.generateReturnUrl());
     }
 }
