@@ -22,36 +22,33 @@ public class VmqPayReturnParam {
     @JsonAlias("charset")
     private String charset;
 
-    /**
-     * 商家网站唯一订单号, 即为系统中的支付订单号
-     */
-    @Schema(description = "支付订单号")
-    @JsonAlias("out_trade_no")
-    private String outTradeNo;
+    @Schema(description = "商户订单号")
+    @JsonAlias("payId")
+    private String payId;
 
-    /**
-     * 该交易在V免签系统中的交易流水号。最长 64 位。
-     * 示例值：2016081121001004630200142207
-     */
-    @Schema(description = "网关订单号")
-    @JsonAlias("trade_no")
-    private String tradeNo;
+    @Schema(description = "云端订单编号")
+    @JsonAlias("orderId")
+    private String orderId;
 
-    @Schema(description = "接口名称")
-    @JsonAlias("method")
-    private String method;
+    @Schema(description = "入参")
+    @JsonAlias("param")
+    private String param;
 
-    @Schema(description = "支付金额")
-    @JsonAlias("total_amount")
-    private String total_amount;
+    @Schema(description = "支付方式")
+    @JsonAlias("type")
+    private Integer type;
+
+    @Schema(description = "订单金额")
+    @JsonAlias("price")
+    private Double price;
+
+    @Schema(description = "实付金额")
+    @JsonAlias("reallyPrice")
+    private Double reallyPrice;
 
     @Schema(description = "签名")
     @JsonAlias("sign")
     private String sign;
-
-    @Schema(description = "不确定是什么")
-    @JsonAlias("auth_app_id")
-    private String authAppId;
 
     /**
      * V免签分配给开发者的应用ID。
@@ -67,14 +64,6 @@ public class VmqPayReturnParam {
     @Schema(description = "签名算法类型")
     @JsonAlias("sign_type")
     private String signType;
-
-    /**
-     * 收款V免签账号对应的V免签唯一用户号。以 2088 开头的纯 16 位数字。
-     * 示例值：2088111111116894
-     */
-    @Schema(description = "收款V免签账号对应的V免签唯一用户号")
-    @JsonAlias("seller_id")
-    private String sellerId;
 
     /**
      * 前台回跳的时间，格式：yyyy-MM-dd HH:mm:ss。

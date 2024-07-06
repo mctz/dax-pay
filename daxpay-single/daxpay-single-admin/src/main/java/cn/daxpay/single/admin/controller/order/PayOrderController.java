@@ -85,6 +85,15 @@ public class PayOrderController {
         return Res.ok();
     }
 
+    @Operation(summary = "关闭支付窗口")
+    @PostMapping("/closeQr")
+    public ResResult<Void> closeQrPay(String bizOrderNoeNo){
+        PayCloseParam param = new PayCloseParam();
+        param.setBizOrderNo(bizOrderNoeNo);
+        payCloseService.close(param);
+        return Res.ok();
+    }
+
     @Operation(summary = "发起分账")
     @InitPaymentContext(PaymentApiCode.ALLOCATION)
     @PostMapping("/allocation")

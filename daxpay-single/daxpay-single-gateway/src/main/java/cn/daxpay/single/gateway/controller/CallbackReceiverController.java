@@ -51,7 +51,7 @@ public class CallbackReceiverController {
 
     @SneakyThrows
     @Operation(summary = "V免签信息回调")
-    @PostMapping("/vmq")
+    @RequestMapping("/vmq")
     public String vmqPayNotify(HttpServletRequest request) {
         Map<String, String> stringStringMap = PayUtil.toMap(request);
         return vmqPayCallbackService.callback(stringStringMap);

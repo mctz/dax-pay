@@ -30,8 +30,8 @@ public class PayReturnService {
     private final DaxPayProperties properties;
 
     public String vmqPay(VmqPayReturnParam param){
-        PayOrder payOrder = payOrderQueryService.findByOrderNo(param.getOutTradeNo()).orElse(null);
-        if ( Objects.isNull(payOrder)){
+        PayOrder payOrder = payOrderQueryService.findByOrderNo(param.getOrderId()).orElse(null);
+        if (Objects.isNull(payOrder)){
             return StrUtil.format("{}/result/error?msg={}", properties.getFrontH5Url(), URLEncodeUtil.encode("支付订单有问题，请排查"));
         }
         // 如果同步跳转参数为空, 获取系统配置地址, 系统配置如果也为空, 则返回默认地址

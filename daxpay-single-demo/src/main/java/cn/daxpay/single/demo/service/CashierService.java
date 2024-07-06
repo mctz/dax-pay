@@ -24,6 +24,7 @@ import cn.daxpay.single.sdk.response.DaxPayResult;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import com.baomidou.lock.LockTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,9 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CashierService {
+
+    private final LockTemplate lockTemplate;
+
     private final DaxPayDemoProperties daxPayDemoProperties;
 
     /**
@@ -63,6 +67,9 @@ public class CashierService {
         payParam.setChannel(param.getChannel());
         payParam.setMethod(param.getMethod());
 
+        // V免签通道
+        if (Objects.equals("vmq_pay", param.getChannel())){
+        }
         // 支付宝通道
         if (Objects.equals(PayChannelEnum.ALI.getCode(), param.getChannel())){
             // 付款码支付
@@ -117,6 +124,8 @@ public class CashierService {
      * 查询订单是否支付成功
      */
     public boolean queryPayOrderSuccess(String bizOrderNoeNo){
+        // 加锁10s，用于判断轮询是否结束
+        lockTemplate.lock("payment:query:" + bizOrderNoeNo,10000,200);
         QueryPayParam queryPayOrderParam = new QueryPayParam();
         queryPayOrderParam.setBizOrderNoeNo(bizOrderNoeNo);
         DaxPayResult<PayOrderModel> execute = DaxPayKit.execute(queryPayOrderParam);

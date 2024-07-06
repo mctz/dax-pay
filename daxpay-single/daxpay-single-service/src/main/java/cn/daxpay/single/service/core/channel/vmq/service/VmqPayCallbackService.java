@@ -1,6 +1,5 @@
 package cn.daxpay.single.service.core.channel.vmq.service;
 
-import cn.bootx.platform.common.core.util.LocalDateTimeUtil;
 import cn.daxpay.single.core.code.PayChannelEnum;
 import cn.daxpay.single.core.code.PayStatusEnum;
 import cn.daxpay.single.service.code.PayCallbackStatusEnum;
@@ -11,9 +10,9 @@ import cn.daxpay.single.service.common.local.PaymentContextLocal;
 import cn.daxpay.single.service.core.channel.vmq.entity.VmqPayConfig;
 import cn.daxpay.single.service.core.payment.callback.service.PayCallbackService;
 import cn.daxpay.single.service.core.record.callback.service.PayCallbackRecordService;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.qcloud.cos.utils.Md5Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
-
-import static cn.daxpay.single.service.code.AliPayCode.*;
 
 /**
  * V免签回调处理
@@ -59,6 +56,7 @@ public class VmqPayCallbackService {
             if (!this.verifyNotify()) {
                 callbackInfo.setCallbackStatus(PayCallbackStatusEnum.FAIL).setErrorMsg("验证信息格式不通过");
                 // 消息有问题, 保存记录并返回
+                this.resolvePayData();
                 callbackService.saveCallbackRecord();
                 return null;
             }
@@ -98,6 +96,12 @@ public class VmqPayCallbackService {
             log.error("V免签支付配置不存在");
             return false;
         }
+        String appKey = alipayConfig.getAppKey();
+        String sign = Md5Utils.md5Hex(payId + params.get("orderId") + params.get("param") + params.get("type") + params.get("price") + params.get("reallyPrice") + appKey);
+        if (!sign.equals(params.get("sign"))) {
+            log.error("签名校验不通过");
+            return false;
+        }
         return true;
     }
 
@@ -127,15 +131,7 @@ public class VmqPayCallbackService {
      * @see PaymentTypeEnum
      */
     public PaymentTypeEnum getCallbackType() {
-        CallbackLocal callback = PaymentContextLocal.get().getCallbackInfo();
-        Map<String, String> callbackParam = callback.getCallbackParam();
-        String refundFee = callbackParam.get(REFUND_FEE);
-        // 如果有退款金额，说明是退款回调
-        if (StrUtil.isNotBlank(refundFee)){
-            return PaymentTypeEnum.REFUND;
-        } else {
-            return PaymentTypeEnum.PAY;
-        }
+        return PaymentTypeEnum.PAY;
     }
 
     /**
