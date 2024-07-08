@@ -10,6 +10,7 @@ import cn.daxpay.single.core.param.payment.allocation.AllocationParam;
 import cn.daxpay.single.core.param.payment.pay.PayCloseParam;
 import cn.daxpay.single.core.param.payment.pay.PaySyncParam;
 import cn.daxpay.single.core.result.sync.PaySyncResult;
+import cn.daxpay.single.core.util.TradeNoGenerateUtil;
 import cn.daxpay.single.service.annotation.InitPaymentContext;
 import cn.daxpay.single.service.core.order.pay.entity.PayOrder;
 import cn.daxpay.single.service.core.order.pay.service.PayOrderQueryService;
@@ -18,10 +19,10 @@ import cn.daxpay.single.service.core.payment.close.service.PayCloseService;
 import cn.daxpay.single.service.core.payment.sync.service.PaySyncService;
 import cn.daxpay.single.service.dto.order.pay.PayOrderDto;
 import cn.daxpay.single.service.param.order.PayOrderQuery;
-import cn.daxpay.single.core.util.TradeNoGenerateUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author xxm
  * @since 2024/1/9
  */
+@Slf4j
 @Tag(name = "支付订单控制器")
 @RestController
 @RequestMapping("/order/pay")
@@ -39,7 +41,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class PayOrderController {
     private final PayOrderQueryService queryService;
     private final PayCloseService payCloseService;
-
 
     private final PaySyncService paySyncService;
     private final AllocationService allocationService;
@@ -90,7 +91,11 @@ public class PayOrderController {
     public ResResult<Void> closeQrPay(String bizOrderNoeNo){
         PayCloseParam param = new PayCloseParam();
         param.setBizOrderNo(bizOrderNoeNo);
-        payCloseService.close(param);
+        try {
+            payCloseService.close(param);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+        }
         return Res.ok();
     }
 

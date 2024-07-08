@@ -2,13 +2,15 @@ package cn.daxpay.single.demo.service;
 
 import cn.bootx.platform.common.core.exception.BizException;
 import cn.bootx.platform.common.spring.util.WebServletUtil;
+import cn.daxpay.single.core.code.PayChannelEnum;
+import cn.daxpay.single.core.code.PayMethodEnum;
+import cn.daxpay.single.core.code.PayStatusEnum;
+import cn.daxpay.single.core.param.channel.AliPayParam;
+import cn.daxpay.single.core.param.channel.WeChatPayParam;
 import cn.daxpay.single.demo.code.AggregatePayEnum;
 import cn.daxpay.single.demo.configuration.DaxPayDemoProperties;
 import cn.daxpay.single.demo.param.CashierSimplePayParam;
 import cn.daxpay.single.demo.result.PayOrderResult;
-import cn.daxpay.single.sdk.code.PayChannelEnum;
-import cn.daxpay.single.sdk.code.PayMethodEnum;
-import cn.daxpay.single.sdk.code.PayStatusEnum;
 import cn.daxpay.single.sdk.model.assist.WxAccessTokenModel;
 import cn.daxpay.single.sdk.model.assist.WxAuthUrlModel;
 import cn.daxpay.single.sdk.model.pay.PayModel;
@@ -16,8 +18,6 @@ import cn.daxpay.single.sdk.model.pay.PayOrderModel;
 import cn.daxpay.single.sdk.net.DaxPayKit;
 import cn.daxpay.single.sdk.param.assist.WxAccessTokenParam;
 import cn.daxpay.single.sdk.param.assist.WxAuthUrlParam;
-import cn.daxpay.single.sdk.param.channel.AliPayParam;
-import cn.daxpay.single.sdk.param.channel.WeChatPayParam;
 import cn.daxpay.single.sdk.param.pay.PayParam;
 import cn.daxpay.single.sdk.param.pay.QueryPayParam;
 import cn.daxpay.single.sdk.response.DaxPayResult;
@@ -140,11 +140,14 @@ public class CashierService {
             return false;
         }
         String status = data.getStatus();
-        if (Objects.equals(status, PayStatusEnum.PROGRESS.getCode())){
-            return false;
-        }
-        else if (Objects.equals(status, PayStatusEnum.SUCCESS.getCode())){
+        long timeCount = data.getExpiredTime() - (System.currentTimeMillis()/1000) ;
+        boolean isTimeOut = Objects.isNull(data.getExpiredTime())? false : timeCount < 0;
+        if (Objects.equals(status, PayStatusEnum.SUCCESS.getCode())){
             return true;
+        } else if (Objects.equals(status, PayStatusEnum.CLOSE.getCode()) || isTimeOut){
+            throw new BizException("订单超时未支付");
+        } else if (Objects.equals(status, PayStatusEnum.PROGRESS.getCode())){
+            return false;
         } else {
             throw new BizException("订单状态不是支付中或支付完成，请检查");
         }

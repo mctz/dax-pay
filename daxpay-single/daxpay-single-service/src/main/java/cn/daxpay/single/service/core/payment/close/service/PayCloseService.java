@@ -53,8 +53,8 @@ public class PayCloseService {
         if (Objects.isNull(lock)){
             throw new RepetitiveOperationException("支付订单已在关闭中，请勿重复发起");
         }
-        // 等待轮询锁释放
-        while (Objects.isNull(lockTemplate.lock("payment:query:" + param.getBizOrderNo(), 1000, 500))) {}
+        // 轮询时间结束后关闭订单
+        while (Objects.isNull(lockTemplate.lock("payment:query:" + param.getBizOrderNo(), 500, 500))) {}
         try {
             return this.close(payOrder);
         } finally {

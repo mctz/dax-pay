@@ -1,6 +1,6 @@
 package cn.daxpay.single.demo.configuration;
 
-import cn.daxpay.single.sdk.code.SignTypeEnum;
+import cn.daxpay.single.core.code.PaySignTypeEnum;
 import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +25,7 @@ public class DaxPayDemoProperties {
     private String frontH5Url;
 
     /** 签名方式 */
-    private SignTypeEnum signType = SignTypeEnum.MD5;
+    private PaySignTypeEnum signType = PaySignTypeEnum.MD5;
 
     /** 签名秘钥 */
     private String signSecret;

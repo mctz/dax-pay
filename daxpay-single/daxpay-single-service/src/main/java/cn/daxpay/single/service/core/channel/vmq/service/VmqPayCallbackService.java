@@ -97,7 +97,7 @@ public class VmqPayCallbackService {
             return false;
         }
         String appKey = alipayConfig.getAppKey();
-        String sign = Md5Utils.md5Hex(payId + params.get("orderId") + params.get("param") + params.get("type") + params.get("price") + params.get("reallyPrice") + appKey);
+        String sign = Md5Utils.md5Hex(payId + params.get("param") + params.get("type") + params.get("price") + params.get("reallyPrice") + appKey);
         if (!sign.equals(params.get("sign"))) {
             log.error("签名校验不通过");
             return false;

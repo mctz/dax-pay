@@ -1,11 +1,11 @@
 package cn.daxpay.single.demo.controller;
 
 import cn.bootx.platform.common.core.annotation.IgnoreAuth;
+import cn.daxpay.single.core.util.PaySignUtil;
 import cn.daxpay.single.demo.configuration.DaxPayDemoProperties;
 import cn.daxpay.single.sdk.model.notice.AllocNoticeModel;
 import cn.daxpay.single.sdk.model.notice.PayNoticeModel;
 import cn.daxpay.single.sdk.model.notice.RefundNoticeModel;
-import cn.daxpay.single.sdk.util.PaySignUtil;
 import cn.hutool.core.bean.BeanUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

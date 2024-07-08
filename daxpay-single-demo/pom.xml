@@ -15,8 +15,8 @@
     <version>${daxpay.version}</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- 二方库版本 -->
@@ -39,12 +39,19 @@
             <version>${bootx-platform.version}</version>
         </dependency>
 
-        <!-- 支付SDK -->
         <dependency>
+            <groupId>cn.daxpay.single</groupId>
+            <artifactId>daxpay-single-core</artifactId>
+            <version>2.0.8</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- 支付SDK -->
+        <!--<dependency>
             <groupId>cn.daxpay.single</groupId>
             <artifactId>daxpay-single-sdk</artifactId>
             <version>${daxpay.version}</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 </project>
